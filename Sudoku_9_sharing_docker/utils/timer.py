@@ -8,3 +8,4 @@ def timer():
     end_t = time()
     elapsed_time = end_t - start_t
     print(f'Elapsed time: {elapsed_time: .4f}s')
+    return elapsed_time

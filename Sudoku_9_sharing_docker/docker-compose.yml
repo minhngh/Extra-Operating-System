@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+    rabbitmq-server:
+        image: rabbitmq:3
+        container_name: rabbitmq
+        hostname: rabbitmq-server
+        networks: 
+            - sudoku-net
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+    sudoku-1:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+    sudoku-2:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.0
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+networks: 
+    sudoku-net:
+        name: sudoku_net
+        external: true

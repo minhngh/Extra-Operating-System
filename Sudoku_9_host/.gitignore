@@ -4,3 +4,5 @@
 .vscode
 CSP/recursion
 CSP/loop
+CSP/solvers/__pycache__
+CSP/utils/__pycache__

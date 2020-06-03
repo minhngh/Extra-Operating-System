@@ -1,5 +1,4 @@
 from .prepare_grid import *
-
 from .timer import timer
 
 from .grid import print_grid

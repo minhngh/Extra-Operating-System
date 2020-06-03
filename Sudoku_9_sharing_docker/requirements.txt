@@ -1,0 +1,12 @@
+pip==20.1.1
+aio-pika==6.6.1
+aiormq==3.2.2
+certifi==2020.4.5.1
+future==0.18.2
+idna==2.9
+mock==4.0.2
+multidict==4.7.6
+pamqp==2.3.0
+six==1.14.0
+yarl==1.4.2
+psutil==5.7.0

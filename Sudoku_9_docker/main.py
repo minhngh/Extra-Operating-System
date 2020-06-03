@@ -4,8 +4,8 @@ from solvers import *
 
 import os
 import json
-import psutil
 import argparse
+import psutil
 
 def parse_args():
     ap = argparse.ArgumentParser()
@@ -22,6 +22,7 @@ def main(args):
         grid = parse_puzzle(puzzle)
         if not grid:
             print("Invalid puzzle")
+        
         with timer():
             grid = solve_1(grid.copy(), num_threads)
             if grid:
