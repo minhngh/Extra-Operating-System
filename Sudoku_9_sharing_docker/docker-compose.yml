@@ -25,7 +25,7 @@ services:
         build: 
             context: .
             network: host
-        image: sudoku:1.0
+        image: sudoku:1.1
         environment: 
             AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
         depends_on:
