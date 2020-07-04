@@ -12,10 +12,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 def _solve(fringe, explored, lock):
     while fringe:
         # queue
-        # grid = fringe.pop(0)
+        grid = fringe.pop(0)
 
         # stack
-        grid = fringe.pop()
+        # grid = fringe.pop()
 
         if grid in explored:
             continue

@@ -40,6 +40,7 @@ def _solve(fringe, explored, lock, num_threads):
                     fringe.append(new_grid)
                 with cv:
                     cv.notify()
+
     return False        
 
 def solve_2(grid, num_threads):
@@ -47,6 +48,14 @@ def solve_2(grid, num_threads):
     explored = []
     futures = []
     lock = Lock()
+
+
+    global waiting
+    global is_finished
+    global cv
+    waiting = 0
+    is_finished = False
+    cv = Condition()
     executors = ThreadPoolExecutor(max_workers = num_threads)
 
     for _ in range(num_threads):

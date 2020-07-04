@@ -1,11 +1,10 @@
 from .prepare_grid import *
 
 def parse_puzzle(puzzle):
-    assert set(puzzle) <= set(".0123456789")
-    assert len(puzzle) == 81
+    assert set(''.join(puzzle)) <= set(".0123456789")
+    assert len(puzzle) == SIZE ** 2
 
-    grid = dict((square, digits) for square in squares)
-
+    grid = dict((square, tuple(digits)) for square in squares)
     for square, value in zip(squares, puzzle):
         if value in digits and not place(grid, square, value):
             return False
@@ -18,7 +17,7 @@ def print_grid(grid):
     print('-' * 55)
     for row in rows:
         for digit in digits:
-            print(f'|  {grid[row + digit]}  ', end = '')
+            print(f'|  {grid[row + digit][0]}  ', end = '')
         print('|\n' + '-' * 55)
 
 def min_possible_values(grid):
@@ -32,22 +31,22 @@ def valid_grid(grid):
         v = []
         for row in rows:
             if len(grid[f'{row}{col}']) == 1:
-                v.append(grid[f'{row}{col}'])
+                v.append(grid[f'{row}{col}'][0])
         if len(v) != len(set(v)):
             return False
     for row in rows:
         v = []
         for col in cols:
             if len(grid[f'{row}{col}']) == 1:
-                v.append(grid[f'{row}{col}'])
+                v.append(grid[f'{row}{col}'][0])
         if len(v) != len(set(v)):
             return False
-    subgrids = [cross_product(rs, cs) for rs in chunk(rows, 3) for cs in chunk(cols, 3)]
+    subgrids = [cross_product(rs, cs) for rs in chunk(rows, BLOCK_SIZE) for cs in chunk(cols, BLOCK_SIZE)]
     for subgrid in subgrids:
         v = []
         for square in subgrid:
             if len(grid[square]) == 1:
-                v.append(grid[square])
+                v.append(grid[square][0])
         if len(v) != len(set(v)):
             return False
     return True
@@ -57,7 +56,8 @@ def is_solved(grid):
 
 def place(grid, square, digit):
     #get rest numbers
-    other_values = grid[square].replace(digit, '')
+    other_values = list(grid[square])
+    other_values.remove(digit)
     #remove rest numbers
     if all(eliminate(grid, square, val) for val in other_values):
         return grid
@@ -67,13 +67,16 @@ def eliminate(grid, square, digit):
     if digit not in grid[square]:
         return grid
     #remove digit
-    grid[square] = grid[square].replace(digit, '')
+    grid[square] = list(grid[square])
+    grid[square].remove(digit)
+    grid[square] = tuple(grid[square])
+    # grid[square] = grid[square].replace(digit, '')
     #if square has no number, fail
     if len(grid[square]) == 0:
         return False
     elif len(grid[square]) == 1:
         #square has only number, remove it from peers
-        value = grid[square]
+        value = grid[square][0]
         if not all(eliminate(grid, peer, value) for peer in peers[square]):
             return False
     for unit in units[square]:

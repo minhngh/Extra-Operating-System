@@ -32,6 +32,61 @@ services:
             - rabbitmq-server
         networks: 
             - sudoku-net
+    sudoku-3:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+    sudoku-4:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+    sudoku-5:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+    sudoku-6:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
+    sudoku-7:
+        build: 
+            context: .
+            network: host
+        image: sudoku:1.1
+        environment: 
+            AMQP_URL: 'amqp://guest:guest@rabbitmq-server:5672'
+        depends_on:
+            - rabbitmq-server
+        networks: 
+            - sudoku-net
 networks: 
     sudoku-net:
         name: sudoku_net

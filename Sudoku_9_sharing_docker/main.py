@@ -9,6 +9,7 @@ import argparse
 import asyncio
 import psutil
 from threading import Lock
+from time import time
 from aio_pika import connect_robust, Message
 from functools import partial
 
@@ -81,9 +82,14 @@ class Sudoku:
         await asyncio.sleep(5)
         await self.connect(loop)
         await self.exchange.publish(Message(json.dumps(grid).encode('utf-8')), routing_key = Sudoku.QUEUE_NAME)
-        with timer():
-            result = await self.solve(num_threads)
-            Sudoku.print(result)
+ 
+        start_time = time()
+        print(hash(self), start_time)
+        result = await self.solve(num_threads)
+        elapsed_time = time() - start_time
+        print(hash(self), elapsed_time + start_time)
+        # await self.channel.close()
+        return elapsed_time
 
     async def consume(self, message):
         with message.process():
@@ -94,12 +100,17 @@ class Sudoku:
    
 def main(args):
     num_threads = args['num_threads']
-    puzzles = load_puzzles()
-    grid = parse_puzzle(puzzles[1])
-
-    loop = asyncio.get_event_loop()
-    loop.run_until_complete(Sudoku().run(loop, grid, num_threads))
     process = psutil.Process(os.getpid())
-    print(f'Memory usage: {process.memory_info().rss / 1024 : .2f} KB = {process.memory_info().rss / 1024 ** 2 : .2f} MB')
+    total_times = []
+    total_memories = []
+    for i in range(1):
+        puzzles = load_puzzles()
+        grid = parse_puzzle(puzzles[0])
+        loop = asyncio.get_event_loop()
+        elapsed_time = loop.run_until_complete(Sudoku().run(loop, grid, num_threads))
+        total_times.append(elapsed_time)
+        total_memories.append(process.memory_info().rss / 1024 ** 2)
+    print(f'["INFO"] Average time: {sum(total_times)/ len(total_times): .6f}')
+    print(f'["INFO"] Average usage memory: {sum(total_memories)/ len(total_memories): .4f} MB')
 if __name__ == "__main__":
     main(parse_args())
